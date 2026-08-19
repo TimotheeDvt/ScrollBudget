@@ -5,7 +5,8 @@
     <string name="notification_channel_name">Instagram monitoring</string>
     <string name="notification_channel_description">Shows while Scroll Budget is tracking Instagram usage against your time windows.</string>
     <string name="notification_title">Scroll Budget is active</string>
-    <string name="notification_text">Tracking Instagram usage against your time windows.</string>
+    <string name="notification_text_with_window">%1$s-%2$s: %3$d min left</string>
+    <string name="notification_text_no_window">No active time window right now</string>
 
     <string name="accessibility_service_description">Lets Scroll Budget send you to the home screen when your Instagram time budget for the current window is used up.</string>
     <string name="limit_reached_message">Instagram limit reached for this window (%1$d min). Come back later.</string>
@@ -28,12 +29,12 @@
     <string name="add_window_dialog_title">Add window</string>
     <string name="edit_window_dialog_title">Edit window</string>
     <string name="delete_window_title">Delete window?</string>
-    <string name="delete_window_message">%1$s–%2$s will be removed.</string>
+    <string name="delete_window_message">%1$s-%2$s will be removed.</string>
     <string name="error_invalid_cap">Enter a cap greater than 0 minutes</string>
     <string name="error_end_before_start">End time must be after start time</string>
     <string name="error_overlap">This window overlaps another window</string>
-    <string name="usage_row_format">%1$s–%2$s: %3$d/%4$d min used · %5$d min left</string>
-    <string name="edit_row_format">%1$s–%2$s · %3$d min cap</string>
+    <string name="usage_row_format">%1$s-%2$s: %3$d/%4$d min used · %5$d min left</string>
+    <string name="edit_row_format">%1$s-%2$s · %3$d min cap</string>
 
     <string name="title_permissions">Permissions</string>
     <string name="permissions_intro">Scroll Budget needs these to detect Instagram usage and enforce your time budgets. None of these can be requested with a normal popup, so each one opens the right settings screen.</string>
@@ -62,5 +63,5 @@
 
     <string name="permissions_status_format">Permissions: %1$d/%2$d granted</string>
     <string name="review_permissions">Review permissions</string>
-    <string name="resilience_note">If monitoring ever stops after a long idle period despite all this, just reopen Scroll Budget once — it restarts automatically.</string>
+    <string name="resilience_note">If monitoring ever stops after a long idle period despite all this, just reopen Scroll Budget once - it restarts automatically.</string>
 </resources>

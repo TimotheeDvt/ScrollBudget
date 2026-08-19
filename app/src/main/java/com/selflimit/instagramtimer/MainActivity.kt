@@ -74,12 +74,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         refreshPermissionsStatus()
 
-        // Auto-start so the user doesn't have to tap Start every time they open the
-        // app; harmless to call repeatedly since the monitor service no-ops if its
-        // polling loop is already running. Also re-checked here (not just onCreate)
-        // so returning from the permissions screen starts it immediately once
-        // Usage Access has just been granted. Boot persistence is handled
-        // separately by BootCompletedReceiver.
         if (PermissionUtils.hasUsageAccess(this)) {
             UsageMonitorService.start(this)
         }

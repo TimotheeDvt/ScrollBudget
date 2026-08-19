@@ -14,6 +14,7 @@ import com.selflimit.instagramtimer.R
 import com.selflimit.instagramtimer.data.UsageRepository
 import com.selflimit.instagramtimer.data.WindowRepository
 import com.selflimit.instagramtimer.util.ForegroundAppDetector
+import com.selflimit.instagramtimer.util.TimeSlots
 import com.selflimit.instagramtimer.util.TimeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +45,7 @@ class UsageMonitorService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(NOTIFICATION_ID, buildNotification())
+        startForeground(NOTIFICATION_ID, buildNotification(currentStatusText()))
         startMonitoring()
         return START_STICKY
     }
@@ -59,6 +60,7 @@ class UsageMonitorService : Service() {
         monitorJob = scope.launch {
             while (isActive) {
                 pollOnce()
+                updateNotification()
                 delay(POLL_INTERVAL_SECONDS * 1000L)
             }
         }
@@ -74,6 +76,24 @@ class UsageMonitorService : Service() {
         if (usedSeconds >= window.capMinutes * 60) {
             enforceLimit(window.capMinutes)
         }
+    }
+
+    private fun updateNotification() {
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.notify(NOTIFICATION_ID, buildNotification(currentStatusText()))
+    }
+
+    private fun currentStatusText(): String {
+        val window = windowRepository.activeWindowFor(TimeUtils.currentMinuteOfDay())
+            ?: return getString(R.string.notification_text_no_window)
+        val usedMinutes = usageRepository.getUsedSeconds(window.id) / 60
+        val remaining = (window.capMinutes - usedMinutes).coerceAtLeast(0)
+        return getString(
+            R.string.notification_text_with_window,
+            TimeSlots.label(window.startMinute),
+            TimeSlots.label(window.endMinute),
+            remaining
+        )
     }
 
     private fun enforceLimit(capMinutes: Int) {
@@ -95,18 +115,16 @@ class UsageMonitorService : Service() {
         manager.createNotificationChannel(channel)
     }
 
-    private fun buildNotification() =
+    private fun buildNotification(contentText: String) =
         NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title))
-            .setContentText(getString(R.string.notification_text))
+            .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .setOngoing(true)
             .build()
 
     companion object {
-        // v2: bumped from "usage_monitor" because notification channel importance is
-        // immutable after creation — this forces a fresh channel at MIN importance.
         private const val NOTIFICATION_CHANNEL_ID = "usage_monitor_v2"
         private const val NOTIFICATION_ID = 1001
         private const val INSTAGRAM_PACKAGE = "com.instagram.android"
