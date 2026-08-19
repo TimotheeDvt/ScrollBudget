@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Scroll Budget</string>
+    <string name="placeholder_message">Scroll Budget scaffold is running.</string>
+</resources>
