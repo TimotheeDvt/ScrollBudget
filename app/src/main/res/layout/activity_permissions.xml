@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@string/title_permissions" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:text="@string/permissions_intro" />
+
+        <!-- Usage Access -->
+        <View style="@style/PermissionDivider" />
+        <TextView style="@style/PermissionTitle" android:text="@string/permission_usage_access_title" />
+        <TextView style="@style/PermissionDesc" android:text="@string/permission_usage_access_desc" />
+        <TextView android:id="@+id/usageAccessStatus" style="@style/PermissionStatus" />
+        <Button
+            android:id="@+id/usageAccessButton"
+            style="@style/PermissionButton"
+            android:text="@string/action_open_settings" />
+
+        <!-- Accessibility Service -->
+        <View style="@style/PermissionDivider" />
+        <TextView style="@style/PermissionTitle" android:text="@string/permission_accessibility_title" />
+        <TextView style="@style/PermissionDesc" android:text="@string/permission_accessibility_desc" />
+        <TextView android:id="@+id/accessibilityStatus" style="@style/PermissionStatus" />
+        <Button
+            android:id="@+id/accessibilityButton"
+            style="@style/PermissionButton"
+            android:text="@string/action_enable" />
+
+        <!-- Notifications -->
+        <View style="@style/PermissionDivider" />
+        <TextView style="@style/PermissionTitle" android:text="@string/permission_notifications_title" />
+        <TextView style="@style/PermissionDesc" android:text="@string/permission_notifications_desc" />
+        <TextView android:id="@+id/notificationsStatus" style="@style/PermissionStatus" />
+        <Button
+            android:id="@+id/notificationsButton"
+            style="@style/PermissionButton"
+            android:text="@string/action_allow" />
+
+        <!-- Battery optimization -->
+        <View style="@style/PermissionDivider" />
+        <TextView style="@style/PermissionTitle" android:text="@string/permission_battery_title" />
+        <TextView style="@style/PermissionDesc" android:text="@string/permission_battery_desc" />
+        <TextView android:id="@+id/batteryStatus" style="@style/PermissionStatus" />
+        <Button
+            android:id="@+id/batteryButton"
+            style="@style/PermissionButton"
+            android:text="@string/action_allow" />
+
+        <View style="@style/PermissionDivider" />
+
+        <Button
+            android:id="@+id/continueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/action_continue" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,5 +1,6 @@
 package com.selflimit.instagramtimer
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -38,6 +39,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, WindowsActivity::class.java))
         }
 
+        binding.reviewPermissionsButton.setOnClickListener {
+            startActivity(Intent(this, PermissionsActivity::class.java))
+        }
+
         binding.startButton.setOnClickListener {
             if (PermissionUtils.hasUsageAccess(this)) {
                 UsageMonitorService.start(this)
@@ -53,13 +58,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Monitoring stopped", Toast.LENGTH_SHORT).show()
         }
 
-        // Auto-start so the user doesn't have to tap Start every time they open the
-        // app; harmless to call repeatedly since the monitor service no-ops if its
-        // polling loop is already running. Boot persistence is handled separately
-        // by BootCompletedReceiver.
-        if (PermissionUtils.hasUsageAccess(this)) {
-            UsageMonitorService.start(this)
-        }
+        maybeLaunchFirstRunPermissionFlow()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -69,6 +68,39 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshPermissionsStatus()
+
+        // Auto-start so the user doesn't have to tap Start every time they open the
+        // app; harmless to call repeatedly since the monitor service no-ops if its
+        // polling loop is already running. Also re-checked here (not just onCreate)
+        // so returning from the permissions screen starts it immediately once
+        // Usage Access has just been granted. Boot persistence is handled
+        // separately by BootCompletedReceiver.
+        if (PermissionUtils.hasUsageAccess(this)) {
+            UsageMonitorService.start(this)
+        }
+    }
+
+    private fun maybeLaunchFirstRunPermissionFlow() {
+        val prefs = getSharedPreferences(APP_STATE_PREFS, Context.MODE_PRIVATE)
+        if (prefs.getBoolean(KEY_ONBOARDING_SHOWN, false)) return
+        prefs.edit().putBoolean(KEY_ONBOARDING_SHOWN, true).apply()
+        if (!PermissionUtils.allGranted(this)) {
+            startActivity(Intent(this, PermissionsActivity::class.java))
+        }
+    }
+
+    private fun refreshPermissionsStatus() {
+        var granted = 0
+        if (PermissionUtils.hasUsageAccess(this)) granted++
+        if (PermissionUtils.isAccessibilityServiceEnabled(this)) granted++
+        if (PermissionUtils.hasNotificationPermission(this)) granted++
+        if (PermissionUtils.isIgnoringBatteryOptimizations(this)) granted++
+        binding.statusText.text = getString(R.string.permissions_status_format, granted, TOTAL_PERMISSIONS)
     }
 
     private fun refreshUsage() {
@@ -96,5 +128,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val USAGE_REFRESH_INTERVAL_MS = 5000L
+        private const val APP_STATE_PREFS = "app_state"
+        private const val KEY_ONBOARDING_SHOWN = "onboarding_shown"
+        private const val TOTAL_PERMISSIONS = 4
     }
 }

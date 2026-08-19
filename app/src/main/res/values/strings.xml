@@ -34,4 +34,30 @@
     <string name="error_overlap">This window overlaps another window</string>
     <string name="usage_row_format">%1$s–%2$s: %3$d/%4$d min used · %5$d min left</string>
     <string name="edit_row_format">%1$s–%2$s · %3$d min cap</string>
+
+    <string name="title_permissions">Permissions</string>
+    <string name="permissions_intro">Scroll Budget needs these to detect Instagram usage and enforce your time budgets. None of these can be requested with a normal popup, so each one opens the right settings screen.</string>
+
+    <string name="permission_usage_access_title">Usage Access</string>
+    <string name="permission_usage_access_desc">Lets Scroll Budget see when Instagram is in the foreground, so it can track how many minutes you\'ve used.</string>
+
+    <string name="permission_accessibility_title">Accessibility Service</string>
+    <string name="permission_accessibility_desc">Lets Scroll Budget send you to the home screen when your time budget for the current window runs out.</string>
+
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_desc">Required so Android allows the ongoing tracking notification to be shown while monitoring is active.</string>
+
+    <string name="permission_battery_title">Battery Optimization</string>
+    <string name="permission_battery_desc">Ignoring battery optimizations keeps monitoring running reliably in the background instead of being paused by the system.</string>
+
+    <string name="status_granted">Granted</string>
+    <string name="status_not_granted">Not granted</string>
+
+    <string name="action_open_settings">Open Settings</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_continue">Continue</string>
+
+    <string name="permissions_status_format">Permissions: %1$d/%2$d granted</string>
+    <string name="review_permissions">Review permissions</string>
 </resources>

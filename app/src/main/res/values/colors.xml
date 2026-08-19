@@ -3,4 +3,6 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="ic_launcher_background">#FF6200EE</color>
+    <color name="status_granted">#2E7D32</color>
+    <color name="status_not_granted">#C62828</color>
 </resources>
