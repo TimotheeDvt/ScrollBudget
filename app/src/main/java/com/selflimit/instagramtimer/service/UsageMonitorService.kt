@@ -87,7 +87,7 @@ class UsageMonitorService : Service() {
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             getString(R.string.notification_channel_name),
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_MIN
         ).apply {
             description = getString(R.string.notification_channel_description)
         }
@@ -100,12 +100,14 @@ class UsageMonitorService : Service() {
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
             .setOngoing(true)
             .build()
 
     companion object {
-        private const val NOTIFICATION_CHANNEL_ID = "usage_monitor"
+        // v2: bumped from "usage_monitor" because notification channel importance is
+        // immutable after creation — this forces a fresh channel at MIN importance.
+        private const val NOTIFICATION_CHANNEL_ID = "usage_monitor_v2"
         private const val NOTIFICATION_ID = 1001
         private const val INSTAGRAM_PACKAGE = "com.instagram.android"
         private const val POLL_INTERVAL_SECONDS = 30L

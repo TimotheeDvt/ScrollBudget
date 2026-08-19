@@ -12,4 +12,26 @@
 
     <string name="start_monitoring">Start monitoring</string>
     <string name="stop_monitoring">Stop monitoring</string>
+
+    <string name="title_todays_usage">Today\'s usage</string>
+    <string name="title_time_windows">Time windows</string>
+    <string name="edit_time_windows">Edit time windows</string>
+    <string name="add_window">Add window</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="start_time_label">Start</string>
+    <string name="end_time_label">End</string>
+    <string name="cap_minutes_label">Cap</string>
+    <string name="cap_minutes_hint">Minutes</string>
+    <string name="add_window_dialog_title">Add window</string>
+    <string name="edit_window_dialog_title">Edit window</string>
+    <string name="delete_window_title">Delete window?</string>
+    <string name="delete_window_message">%1$s–%2$s will be removed.</string>
+    <string name="error_invalid_cap">Enter a cap greater than 0 minutes</string>
+    <string name="error_end_before_start">End time must be after start time</string>
+    <string name="error_overlap">This window overlaps another window</string>
+    <string name="usage_row_format">%1$s–%2$s: %3$d/%4$d min used · %5$d min left</string>
+    <string name="edit_row_format">%1$s–%2$s · %3$d min cap</string>
 </resources>
