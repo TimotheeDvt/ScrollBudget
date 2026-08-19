@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Scroll Budget</string>
     <string name="placeholder_message">Scroll Budget scaffold is running.</string>
+
+    <string name="notification_channel_name">Instagram monitoring</string>
+    <string name="notification_channel_description">Shows while Scroll Budget is tracking Instagram usage against your time windows.</string>
+    <string name="notification_title">Scroll Budget is active</string>
+    <string name="notification_text">Tracking Instagram usage against your time windows.</string>
+
+    <string name="accessibility_service_description">Lets Scroll Budget send you to the home screen when your Instagram time budget for the current window is used up.</string>
+    <string name="limit_reached_message">Instagram limit reached for this window (%1$d min). Come back later.</string>
+
+    <string name="start_monitoring">Start monitoring</string>
+    <string name="stop_monitoring">Stop monitoring</string>
 </resources>
