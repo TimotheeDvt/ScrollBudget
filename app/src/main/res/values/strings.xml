@@ -49,6 +49,7 @@
 
     <string name="permission_battery_title">Battery Optimization</string>
     <string name="permission_battery_desc">Ignoring battery optimizations keeps monitoring running reliably in the background instead of being paused by the system.</string>
+    <string name="permission_battery_manual_note">The prompt above doesn\'t always cover every way Android throttles background apps on this phone. For best reliability, also open App Info below, then go to Battery and set it to \"Unrestricted\" (not just \"Optimized\").</string>
 
     <string name="status_granted">Granted</string>
     <string name="status_not_granted">Not granted</string>
@@ -57,7 +58,9 @@
     <string name="action_enable">Enable</string>
     <string name="action_allow">Allow</string>
     <string name="action_continue">Continue</string>
+    <string name="action_open_app_info">Open App Info</string>
 
     <string name="permissions_status_format">Permissions: %1$d/%2$d granted</string>
     <string name="review_permissions">Review permissions</string>
+    <string name="resilience_note">If monitoring ever stops after a long idle period despite all this, just reopen Scroll Budget once — it restarts automatically.</string>
 </resources>

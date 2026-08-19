@@ -63,7 +63,19 @@
             style="@style/PermissionButton"
             android:text="@string/action_allow" />
 
+        <TextView style="@style/PermissionDesc" android:text="@string/permission_battery_manual_note" />
+        <Button
+            android:id="@+id/appInfoButton"
+            style="@style/PermissionButton"
+            android:text="@string/action_open_app_info" />
+
         <View style="@style/PermissionDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="@string/resilience_note" />
 
         <Button
             android:id="@+id/continueButton"

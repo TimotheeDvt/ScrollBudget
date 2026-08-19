@@ -47,6 +47,15 @@ class PermissionsActivity : AppCompatActivity() {
             )
         }
 
+        binding.appInfoButton.setOnClickListener {
+            startActivity(
+                Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$packageName")
+                )
+            )
+        }
+
         binding.continueButton.setOnClickListener { finish() }
     }
 
