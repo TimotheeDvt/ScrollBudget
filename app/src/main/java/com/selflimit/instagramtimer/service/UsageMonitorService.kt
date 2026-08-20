@@ -46,7 +46,8 @@ class UsageMonitorService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(NOTIFICATION_ID, buildNotification(currentStatusText()))
+        val (title, text) = currentNotificationContent()
+        startForeground(NOTIFICATION_ID, buildNotification(title, text))
         startMonitoring()
         return START_STICKY
     }
@@ -82,20 +83,22 @@ class UsageMonitorService : Service() {
 
     private fun updateNotification() {
         val manager = getSystemService(NotificationManager::class.java)
-        manager.notify(NOTIFICATION_ID, buildNotification(currentStatusText()))
+        val (title, text) = currentNotificationContent()
+        manager.notify(NOTIFICATION_ID, buildNotification(title, text))
     }
 
-    private fun currentStatusText(): String {
+    private fun currentNotificationContent(): Pair<String, String> {
         val window = windowRepository.activeWindowFor(TimeUtils.currentMinuteOfDay())
-            ?: return getString(R.string.notification_text_no_window)
+            ?: return getString(R.string.notification_title) to getString(R.string.notification_text_no_window)
         val usedMinutes = usageRepository.getUsedSeconds(window.id) / 60
         val remaining = (window.capMinutes - usedMinutes).coerceAtLeast(0)
-        return getString(
-            R.string.notification_text_with_window,
+        val title = getString(
+            R.string.notification_window_title,
             TimeSlots.label(window.startMinute),
-            TimeSlots.label(window.endMinute),
-            remaining
+            TimeSlots.label(window.endMinute)
         )
+        val text = getString(R.string.notification_text_with_window, remaining, window.capMinutes)
+        return title to text
     }
 
     private fun enforceLimit(capMinutes: Int) {
@@ -117,9 +120,9 @@ class UsageMonitorService : Service() {
         manager.createNotificationChannel(channel)
     }
 
-    private fun buildNotification(contentText: String) =
+    private fun buildNotification(title: String, contentText: String) =
         NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(getString(R.string.notification_title))
+            .setContentTitle(title)
             .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_MIN)

@@ -5,7 +5,8 @@
     <string name="notification_channel_name">Instagram monitoring</string>
     <string name="notification_channel_description">Shows while Scroll Budget is tracking Instagram usage against your time windows.</string>
     <string name="notification_title">Scroll Budget is active</string>
-    <string name="notification_text_with_window">%1$s-%2$s: %3$d min left</string>
+    <string name="notification_window_title">%1$s-%2$s</string>
+    <string name="notification_text_with_window">%1$d/%2$d min left</string>
     <string name="notification_text_no_window">No active time window right now</string>
 
     <string name="accessibility_service_description">Lets Scroll Budget send you to the home screen when your Instagram time budget for the current window is used up.</string>

@@ -102,7 +102,7 @@ class DayScheduleView @JvmOverloads constructor(
 
             if (rect.height() >= dp(18f)) {
                 val timeLabel = "${TimeSlots.label(window.startMinute)}-${TimeSlots.label(window.endMinute)}"
-                val remainingLabel = "${remaining.coerceAtLeast(0)}/${window.capMinutes} min used"
+                val remainingLabel = "${remaining.coerceAtLeast(0)}/${window.capMinutes} min left"
                 val textY = rect.top + dp(15f)
                 canvas.drawText(timeLabel, rect.left + dp(6f), textY, windowLabelPaint)
                 canvas.drawText(remainingLabel, rect.right - dp(6f), textY, windowLabelPaintRight)
