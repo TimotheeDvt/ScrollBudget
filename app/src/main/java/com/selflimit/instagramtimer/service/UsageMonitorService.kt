@@ -75,10 +75,20 @@ class UsageMonitorService : Service() {
 
         val window = windowRepository.activeWindowFor(TimeUtils.currentMinuteOfDay()) ?: return
         val usedSeconds = usageRepository.addUsage(window.id, POLL_INTERVAL_SECONDS.toInt())
+        val milestoneSeconds = MILESTONE_MINUTES * 60
+
+        if (usedSeconds > 0 && usedSeconds % milestoneSeconds == 0) {
+            showMilestone(usedSeconds / 60)
+        }
 
         if (usedSeconds >= window.capMinutes * 60) {
             enforceLimit(window.capMinutes)
         }
+    }
+
+    private fun showMilestone(usedMinutes: Int) {
+        val accessibilityService = InstagramAccessibilityService.instance ?: return
+        accessibilityService.showBlockedMessage(getString(R.string.usage_milestone_message, usedMinutes))
     }
 
     private fun updateNotification() {
@@ -135,6 +145,7 @@ class UsageMonitorService : Service() {
         private const val INSTAGRAM_PACKAGE = "com.instagram.android"
         private const val POLL_INTERVAL_SECONDS = 30L
         private const val LOOKBACK_MILLIS = 60 * 60 * 1000L
+        private const val MILESTONE_MINUTES = 10
 
         /** In-memory flag reflecting whether the service is currently alive in this process. */
         var isRunning: Boolean = false

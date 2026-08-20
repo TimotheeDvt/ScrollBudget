@@ -11,6 +11,7 @@
 
     <string name="accessibility_service_description">Lets Scroll Budget send you to the home screen when your Instagram time budget for the current window is used up.</string>
     <string name="limit_reached_message">Instagram limit reached for this window (%1$d min). Come back later.</string>
+    <string name="usage_milestone_message">%1$d min passed</string>
 
     <string name="monitoring_toggle_label">Monitoring</string>
 
