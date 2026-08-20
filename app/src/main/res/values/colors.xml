@@ -5,4 +5,9 @@
     <color name="ic_launcher_background">#FF6200EE</color>
     <color name="status_granted">#2E7D32</color>
     <color name="status_not_granted">#C62828</color>
+
+    <color name="day_background">#E8E8E8</color>
+    <color name="day_grid_line">#CCCCCC</color>
+    <color name="day_grid_label">#757575</color>
+    <color name="now_indicator">#E53935</color>
 </resources>

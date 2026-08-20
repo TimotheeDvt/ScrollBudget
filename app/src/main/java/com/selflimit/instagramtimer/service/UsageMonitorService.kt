@@ -40,6 +40,7 @@ class UsageMonitorService : Service() {
         usageRepository = UsageRepository(applicationContext)
         usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         createNotificationChannel()
+        isRunning = true
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -51,6 +52,7 @@ class UsageMonitorService : Service() {
     }
 
     override fun onDestroy() {
+        isRunning = false
         scope.cancel()
         super.onDestroy()
     }
@@ -130,6 +132,10 @@ class UsageMonitorService : Service() {
         private const val INSTAGRAM_PACKAGE = "com.instagram.android"
         private const val POLL_INTERVAL_SECONDS = 30L
         private const val LOOKBACK_MILLIS = 60 * 60 * 1000L
+
+        /** In-memory flag reflecting whether the service is currently alive in this process. */
+        var isRunning: Boolean = false
+            private set
 
         fun start(context: Context) {
             val intent = Intent(context, UsageMonitorService::class.java)

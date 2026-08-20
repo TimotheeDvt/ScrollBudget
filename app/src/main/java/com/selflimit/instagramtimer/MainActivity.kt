@@ -2,22 +2,22 @@ package com.selflimit.instagramtimer
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.selflimit.instagramtimer.data.UsageRepository
 import com.selflimit.instagramtimer.data.WindowRepository
 import com.selflimit.instagramtimer.databinding.ActivityMainBinding
-import com.selflimit.instagramtimer.databinding.ItemWindowUsageBinding
 import com.selflimit.instagramtimer.service.UsageMonitorService
 import com.selflimit.instagramtimer.util.PermissionUtils
-import com.selflimit.instagramtimer.util.TimeSlots
 import com.selflimit.instagramtimer.util.TimeUtils
+import com.selflimit.instagramtimer.view.DayScheduleView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -43,27 +43,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, PermissionsActivity::class.java))
         }
 
-        binding.startButton.setOnClickListener {
-            if (PermissionUtils.hasUsageAccess(this)) {
-                UsageMonitorService.start(this)
-                Toast.makeText(this, "Monitoring started", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Grant Usage Access first, then tap Start again", Toast.LENGTH_LONG).show()
-                startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-            }
-        }
-
-        binding.stopButton.setOnClickListener {
-            UsageMonitorService.stop(this)
-            Toast.makeText(this, "Monitoring stopped", Toast.LENGTH_SHORT).show()
-        }
-
         maybeLaunchFirstRunPermissionFlow()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 while (true) {
-                    refreshUsage()
+                    refreshDaySchedule()
                     delay(USAGE_REFRESH_INTERVAL_MS)
                 }
             }
@@ -77,6 +62,23 @@ class MainActivity : AppCompatActivity() {
         if (PermissionUtils.hasUsageAccess(this)) {
             UsageMonitorService.start(this)
         }
+        binding.monitorToggle.setOnCheckedChangeListener(null)
+        binding.monitorToggle.isChecked = UsageMonitorService.isRunning
+        binding.monitorToggle.setOnCheckedChangeListener { toggle, isChecked ->
+            if (isChecked) {
+                if (PermissionUtils.hasUsageAccess(this)) {
+                    UsageMonitorService.start(this)
+                    Toast.makeText(this, "Monitoring started", Toast.LENGTH_SHORT).show()
+                } else {
+                    toggle.isChecked = false
+                    Toast.makeText(this, "Grant Usage Access first, then try again", Toast.LENGTH_LONG).show()
+                    startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                }
+            } else {
+                UsageMonitorService.stop(this)
+                Toast.makeText(this, "Monitoring stopped", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun maybeLaunchFirstRunPermissionFlow() {
@@ -89,41 +91,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshPermissionsStatus() {
-        var granted = 0
-        if (PermissionUtils.hasUsageAccess(this)) granted++
-        if (PermissionUtils.isAccessibilityServiceEnabled(this)) granted++
-        if (PermissionUtils.hasNotificationPermission(this)) granted++
-        if (PermissionUtils.isIgnoringBatteryOptimizations(this)) granted++
-        binding.statusText.text = getString(R.string.permissions_status_format, granted, TOTAL_PERMISSIONS)
+        setDotStatus(binding.dotUsageAccess, PermissionUtils.hasUsageAccess(this))
+        setDotStatus(binding.dotAccessibility, PermissionUtils.isAccessibilityServiceEnabled(this))
+        setDotStatus(binding.dotNotifications, PermissionUtils.hasNotificationPermission(this))
+        setDotStatus(binding.dotBattery, PermissionUtils.isIgnoringBatteryOptimizations(this))
     }
 
-    private fun refreshUsage() {
-        binding.windowsUsageContainer.removeAllViews()
-        val inflater = LayoutInflater.from(this)
+    private fun setDotStatus(dot: android.view.View, granted: Boolean) {
+        val colorRes = if (granted) R.color.status_granted else R.color.status_not_granted
+        dot.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, colorRes))
+    }
+
+    private fun refreshDaySchedule() {
         val currentMinute = TimeUtils.currentMinuteOfDay()
         val windows = windowRepository.getWindows().sortedBy { it.startMinute }
-
-        for (window in windows) {
-            val row = ItemWindowUsageBinding.inflate(inflater, binding.windowsUsageContainer, false)
-            val usedMinutes = usageRepository.getUsedSeconds(window.id) / 60
-            val remaining = (window.capMinutes - usedMinutes).coerceAtLeast(0)
-            row.usageText.text = getString(
-                R.string.usage_row_format,
-                TimeSlots.label(window.startMinute),
-                TimeSlots.label(window.endMinute),
-                usedMinutes,
-                window.capMinutes,
-                remaining
-            )
-            row.usageText.alpha = if (window.contains(currentMinute)) 1.0f else 0.5f
-            binding.windowsUsageContainer.addView(row.root)
+        val entries = windows.map { window ->
+            DayScheduleView.Entry(window, usageRepository.getUsedSeconds(window.id) / 60)
         }
+        binding.dayScheduleView.setData(entries, currentMinute)
     }
 
     companion object {
         private const val USAGE_REFRESH_INTERVAL_MS = 5000L
         private const val APP_STATE_PREFS = "app_state"
         private const val KEY_ONBOARDING_SHOWN = "onboarding_shown"
-        private const val TOTAL_PERMISSIONS = 4
     }
 }
